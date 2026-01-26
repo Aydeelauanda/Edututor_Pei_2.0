@@ -1,0 +1,41 @@
+.dashboard {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: #f8fafc;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 300px;
+  background-color: white;
+  border-right: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  z-index: 50;
+}
+
+.mainContent {
+  flex: 1;
+  padding: 3.5rem 5rem;
+  overflow-y: auto;
+}
+
+@media (max-width: 1280px) {
+  .mainContent {
+    padding: 2.5rem 3rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 80px;
+  }
+  .sidebar span, .sidebar p, .sidebar h1, .sidebar nav a span {
+    display: none;
+  }
+  .mainContent {
+    padding: 2rem;
+  }
+}

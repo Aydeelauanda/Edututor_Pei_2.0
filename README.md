@@ -1,16 +1,40 @@
-# aline_edututor
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+</div>
 
-A new Flutter project.
+# Run and deploy your AI Studio app
 
-## Getting Started
+This contains everything you need to run your app locally.
 
-This project is a starting point for a Flutter application.
+View your app in AI Studio: https://ai.studio/apps/drive/1bEbfBGlpwuHyQjzR4OVdQDEttWNh1MFP
 
-A few resources to get you started if this is your first Flutter project:
+## Run Locally
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+**Prerequisites:**  Node.js
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+1. Install dependencies:
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`
+
+
+ /*{
+    id: 0,
+    headerTitle: "Gestão Integrada",
+    title: <span>Gestão <span className="text-blue-400">Eficiente</span></span>,
+    desc: "Acompanhe o desenvolvimento de cada aluno em tempo real com dashboards inteligentes.",
+    accent: "#3b82f6",
+    glow: "rgba(59, 130, 246, 0.15)",
+    type: 'dashboard'
+  },
+  {
+    id: 1,
+    headerTitle: "Análise de Dados",
+    title: <span>Dados que <span className="text-emerald-400">Transformam</span></span>,
+    desc: "Métricas precisas e seguras para embasar as melhores decisões pedagógicas.",
+    accent: "#10b981",
+    glow: "rgba(16, 185, 129, 0.15)",
+    type: 'analytics'
+  }, */
