@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --border-color: #e2e8f0;
+}
+
+.dark {
+  --bg-primary: #0f172a;
+  /* slate-900 */
+  --bg-secondary: #1e293b;
+  /* slate-800 */
+  --text-primary: #f8fafc;
+  /* slate-50 */
+  --text-secondary: #94a3b8;
+  /* slate-400 */
+  --border-color: #334155;
+  /* slate-700 */
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-50 transition-colors duration-300;
+}
+
+/* Global utility for cards/containers if they use these classes via @apply or similar, 
+   but since we use CSS modules, we might need to reference variables or generic classes */
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  transition: background-color 0.5s, color 0.5s;
+}
+
+@media (min-width: 1024px) {
+  .container {
+    flex-direction: row;
+  }
+}
+
+.mainPane {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 2.5rem;
+  position: relative;
+  z-index: 10;
+  background-color: var(--bg-secondary);
+  transition: background-color 0.5s;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+@media (min-width: 768px) {
+  .mainPane {
+    padding: 3.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mainPane {
+    width: 40%;
+    padding: 5rem;
+  }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background-color: rgba(20, 57, 109, 0.1);
+  color: #14396D;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+}
+
+/* Dark mode overrides for specific elements not covered by variables if needed */

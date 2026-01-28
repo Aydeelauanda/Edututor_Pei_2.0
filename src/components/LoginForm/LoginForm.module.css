@@ -1,0 +1,162 @@
+/* LoginForm.module.css */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.75rem;
+  /* Espaço para o ícone da esquerda */
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  /* Evita zoom automático no iOS (mínimo 16px) */
+  transition: all 0.2s ease;
+}
+
+/* Responsividade do Botão */
+.submitBtn {
+  width: 100%;
+  padding: 0.875rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Media Query para telas muito pequenas */
+@media (max-width: 480px) {
+  .forgotLink {
+    font-size: 0.75rem;
+  }
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  color: #1e293b;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.forgotLink {
+  color: #2379BC;
+  /* Secondary color */
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.iconLeft {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 1.25rem;
+  display: flex;
+  align-items: center;
+  color: #14396D;
+  /* Primary color */
+  pointer-events: none;
+}
+
+.input {
+  width: 100%;
+  background-color: #ffffff;
+  border: 2px solid #14396D;
+  /* Borda com cor Primary */
+  border-radius: 0.875rem;
+  padding: 0.75rem 1.25rem 0.75rem 3.25rem;
+  font-weight: 600;
+  color: #0f172a;
+  outline: none;
+  transition: all 0.3s;
+  font-size: 0.9rem;
+}
+
+.input:focus {
+  border-color: #1B9195;
+  /* Accent color on focus */
+  box-shadow: 0 0 0 4px rgba(27, 145, 149, 0.1);
+}
+
+.eyeButton {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.submitBtn {
+  width: 100%;
+  background-color: #14396D;
+  /* Primary color */
+  color: white;
+  padding: 0.875rem;
+  border-radius: 0.875rem;
+  font-weight: 800;
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.3s;
+  box-shadow: 0 8px 20px -5px rgba(20, 57, 109, 0.4);
+  margin-top: 1.5rem;
+  /* Aumentado de 0.25rem para 1.5rem para abaixar o botão */
+}
+
+.submitBtn:hover {
+  background-color: #2379BC;
+  /* Secondary color on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px -8px rgba(35, 121, 188, 0.4);
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.image {
+  
+  width: 120px;  
+  height: auto;   
+  object-fit: contain;
+  transition: transform 0.3s ease;  
+}
+ 
+@media (min-width: 1024px) {
+  .image {
+    width: 240px;
+  }
+}

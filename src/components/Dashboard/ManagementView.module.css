@@ -1,0 +1,246 @@
+.container {
+    padding: 1.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    overflow-y: auto;
+    color: inherit;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.025em;
+    transition: color 0.3s;
+}
+
+:global(.dark) .title {
+    color: #f8fafc;
+}
+
+.subtitle {
+    color: #64748b;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+:global(.dark) .subtitle {
+    color: #94a3b8;
+}
+
+/* Tabs */
+.tabsContainer {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 1px;
+}
+
+:global(.dark) .tabsContainer {
+    border-bottom-color: #334155;
+}
+
+.tab {
+    padding: 0.75rem 1.25rem;
+    font-weight: 600;
+    color: #64748b;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+:global(.dark) .tab {
+    color: #94a3b8;
+}
+
+.tab:hover {
+    color: #14396D;
+    background-color: #f8fafc;
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+:global(.dark) .tab:hover {
+    color: #38bdf8;
+    background-color: #1e293b;
+}
+
+.activeTab {
+    color: #14396D;
+    border-bottom-color: #14396D;
+}
+
+:global(.dark) .activeTab {
+    color: #38bdf8;
+    border-bottom-color: #38bdf8;
+}
+
+/* Shared List/Form Styles */
+.contentArea {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+}
+
+.searchGroup {
+    position: relative;
+    flex: 1;
+    max-width: 400px;
+}
+
+.newButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #14396D;
+    color: white;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px -1px rgba(20, 57, 109, 0.2);
+}
+
+.newButton:hover {
+    background-color: #2379BC;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 8px -1px rgba(20, 57, 109, 0.3);
+}
+
+/* Form Styles Override/Additions */
+.formContainer {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+    max-width: 800px;
+    margin: 0 auto;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+:global(.dark) .formContainer {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #f8fafc;
+}
+
+.sectionTitle {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 1.5rem;
+    transition: color 0.3s;
+}
+
+:global(.dark) .sectionTitle {
+    color: #f8fafc;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+}
+
+@media (min-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.fullWidth {
+    grid-column: 1 / -1;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+.label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #475569;
+}
+
+:global(.dark) .label {
+    color: #94a3b8;
+}
+
+.input,
+.select {
+    padding: 0.625rem 0.875rem;
+    border-radius: 0.5rem;
+    border: 1px solid #cbd5e1;
+    font-size: 0.9rem;
+    width: 100%;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+:global(.dark) .input,
+:global(.dark) .select {
+    background-color: #0f172a;
+    border-color: #334155;
+    color: white;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+:global(.dark) .actions {
+    border-top-color: #334155;
+}
+
+.cancelButton {
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    color: #64748b;
+    background: white;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s;
+}
+
+:global(.dark) .cancelButton {
+    background-color: #0f172a;
+    color: #cbd5e1;
+    border-color: #334155;
+}
+
+:global(.dark) .cancelButton:hover {
+    background-color: #1e293b;
+}
+
+.saveButton {
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    color: white;
+    background: #14396D;
+}

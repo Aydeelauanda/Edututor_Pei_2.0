@@ -1,0 +1,140 @@
+.dashboard {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: #f8fafc;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+  flex-direction: column;
+  /* Mobile first: column layout if needed, or stick to flex row and overlay */
+}
+
+@media (min-width: 1024px) {
+  .dashboard {
+    flex-direction: row;
+  }
+}
+
+:global(.dark) .dashboard {
+  background-color: #0f172a;
+}
+
+/* Mobile Header */
+.mobileHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: white;
+  border-bottom: 1px solid #f1f5f9;
+  z-index: 60;
+}
+
+:global(.dark) .mobileHeader {
+  background-color: #1e293b;
+  border-bottom-color: #334155;
+}
+
+@media (min-width: 1024px) {
+  .mobileHeader {
+    display: none;
+  }
+}
+
+.sidebar {
+  width: 300px;
+  background-color: white;
+  border-right: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  z-index: 100;
+
+  /* Mobile: Fixed and hidden by default */
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+}
+
+.sidebarOpen {
+  transform: translateX(0);
+}
+
+@media (min-width: 1024px) {
+  .sidebar {
+    position: relative;
+    transform: none;
+    display: flex;
+  }
+}
+
+:global(.dark) .sidebar {
+  background-color: #1e293b;
+  border-right-color: #334155;
+  color: #f8fafc;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 90;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.overlayVisible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (min-width: 1024px) {
+  .overlay {
+    display: none;
+  }
+}
+
+.image {
+  max-width: 150px;
+}
+
+.mainContent {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  position: relative;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .mainContent {
+    padding: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mainContent {
+    padding: 3.5rem 5rem;
+  }
+}
+
+/* Scrollbar Styling */
+.mainContent::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mainContent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mainContent::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 20px;
+}
+
+:global(.dark) .mainContent::-webkit-scrollbar-thumb {
+  background-color: #475569;
+}
