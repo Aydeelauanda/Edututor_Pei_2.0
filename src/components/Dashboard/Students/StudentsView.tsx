@@ -1,58 +1,49 @@
-import { useState } from 'react';
-import { Search, Plus, Filter, Users, MoreHorizontal, Eye, Edit3, Trash2, CheckCircle2, XCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Search, Plus, Filter, Users, Edit3, Trash2, Loader2 } from 'lucide-react';
 import { StudentRegistrationWizard } from './StudentRegistrationWizard';
 import { StudentDetailView } from './StudentDetailView';
+import { studentService } from '../../../lib/studentService';
 
-// Tipagem para os dados do aluno
+// Tipagem atualizada para refletir o banco de dados
 interface Student {
     id: string;
     nome: string;
     escola: string;
-    status: 'Ativo' | 'Inativo';
-    responsavel: string;
-    foto?: string;
-    // Detalhes extras para a view
-    cid?: string;
+    status: string;
+    responsavel_nome: string;
     serie: string;
-    dataNascimento: string;
+    cid?: string;
+    data_nascimento: string;
     genero: string;
-    dataCadastro: string;
+    created_at: string;
 }
-
-const MOCK_STUDENTS: Student[] = [
-    {
-        id: '1',
-        nome: 'Aline Cely Araujo da Silva',
-        escola: 'Escola Municipal Paulo Freire',
-        status: 'Ativo',
-        responsavel: 'Maria Araujo',
-        serie: '3º Ano',
-        cid: 'F84.0',
-        dataNascimento: '15/05/2016',
-        genero: 'Feminino',
-        dataCadastro: '20/01/2026'
-    },
-    {
-        id: '2',
-        nome: 'Lucas Gabriel Souza',
-        escola: 'Colégio Estadual Santos Dumont',
-        status: 'Inativo',
-        responsavel: 'João Souza',
-        serie: '5º Ano',
-        cid: 'F90.0',
-        dataNascimento: '10/08/2014',
-        genero: 'Masculino',
-        dataCadastro: '15/01/2026'
-    }
-];
 
 export const StudentsView = () => {
     const [isRegistering, setIsRegistering] = useState(false);
     const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+    const [students, setStudents] = useState<Student[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    const handleRegistrationComplete = (data: any) => {
-        console.log('Dados do novo aluno:', data);
+    const loadStudents = async () => {
+        try {
+            setIsLoading(true);
+            const data = await studentService.getAll();
+            setStudents(data as any);
+        } catch (err: any) {
+            setError('Erro ao carregar alunos: ' + err.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        loadStudents();
+    }, []);
+
+    const handleRegistrationComplete = async () => {
         setIsRegistering(false);
+        await loadStudents(); // Recarrega a lista após novo cadastro
     };
 
     if (isRegistering) {
@@ -65,7 +56,7 @@ export const StudentsView = () => {
     }
 
     if (selectedStudent) {
-        return <StudentDetailView student={selectedStudent} onBack={() => setSelectedStudent(null)} />;
+        return <StudentDetailView student={selectedStudent as any} onBack={() => setSelectedStudent(null)} />;
     }
 
     return (
@@ -73,12 +64,12 @@ export const StudentsView = () => {
             {/* Header View */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div className="space-y-1">
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-primary tracking-tight text-primary">
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-primary tracking-tight">
                         Gestão de <span className="italic">Alunos</span>
                     </h1>
                     <p className="text-slate-500 dark:text-slate-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
                         <div className="size-1.5 bg-primary rounded-full animate-pulse" />
-                        {MOCK_STUDENTS.length} alunos registrados em sua rede
+                        {students.length} alunos registrados em sua rede
                     </p>
                 </div>
 
@@ -126,67 +117,79 @@ export const StudentsView = () => {
 
             {/* Students List Table */}
             <div className="bg-white dark:bg-slate-800 rounded-4xl border-[1.5px] border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full border-collapse">
-                        <thead>
-                            <tr className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800 text-left">
-                                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Aluno / Identificação</th>
-                                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Instituição / Escola</th>
-                                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Responsável</th>
-                                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
-                                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-50 dark:divide-slate-800">
-                            {MOCK_STUDENTS.map((student) => (
-                                <tr key={student.id} className="group hover:bg-slate-50/50 dark:hover:bg-white/[0.02] transition-all cursor-pointer" onClick={() => setSelectedStudent(student)}>
-                                    <td className="px-8 py-6">
-                                        <div className="flex items-center gap-4">
-                                            <div className="size-14 rounded-2xl bg-slate-900 dark:bg-white/10 flex items-center justify-center text-white font-black text-lg shadow-lg rotate-3 group-hover:rotate-0 transition-transform overflow-hidden">
-                                                {student.foto ? <img src={student.foto} alt={student.nome} className="size-full object-cover" /> : student.nome.charAt(0)}
-                                            </div>
-                                            <div>
-                                                <p className="font-black text-slate-900 dark:text-white group-hover:text-primary transition-colors text-base">{student.nome}</p>
-                                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight flex items-center gap-1 mt-0.5">
-                                                    <Users size={12} /> {student.serie}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-8 py-6">
-                                        <p className="text-sm font-bold text-slate-600 dark:text-slate-400">{student.escola}</p>
-                                    </td>
-                                    <td className="px-8 py-6">
-                                        <p className="text-sm font-bold text-slate-900 dark:text-slate-300">{student.responsavel}</p>
-                                    </td>
-                                    <td className="px-8 py-6">
-                                        <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${student.status === 'Ativo' ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-500'
-                                            }`}>
-                                            <div className={`size-1.5 rounded-full ${student.status === 'Ativo' ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`} />
-                                            {student.status}
-                                        </span>
-                                    </td>
-                                    <td className="px-8 py-6 text-right">
-                                        <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button className="p-3 bg-slate-50 dark:bg-slate-700/50 text-slate-500 hover:text-primary rounded-xl transition-all"><Edit3 size={18} /></button>
-                                            <button className="p-3 bg-slate-50 dark:bg-slate-700/50 text-slate-500 hover:text-red-500 rounded-xl transition-all"><Trash2 size={18} /></button>
-                                            <button
-                                                className="px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-primary dark:hover:bg-primary dark:hover:text-white transition-all shadow-lg active:scale-95"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setSelectedStudent(student);
-                                                }}
-                                            >
-                                                Ver Aluno
-                                            </button>
-                                        </div>
-                                    </td>
+                {isLoading ? (
+                    <div className="p-20 flex flex-col items-center justify-center text-center">
+                        <Loader2 size={40} className="text-primary animate-spin mb-4" />
+                        <h3 className="font-black text-slate-400 uppercase tracking-widest">Carregando alunos...</h3>
+                    </div>
+                ) : error ? (
+                    <div className="p-20 flex flex-col items-center justify-center text-center">
+                        <p className="text-red-500 font-bold">{error}</p>
+                        <button onClick={loadStudents} className="mt-4 text-primary underline font-black uppercase text-[10px]">Tentar novamente</button>
+                    </div>
+                ) : (
+                    <div className="overflow-x-auto">
+                        <table className="w-full border-collapse">
+                            <thead>
+                                <tr className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800 text-left">
+                                    <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Aluno / Identificação</th>
+                                    <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Instituição / Escola</th>
+                                    <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Responsável</th>
+                                    <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
+                                    <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Ações</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-                {MOCK_STUDENTS.length === 0 && (
+                            </thead>
+                            <tbody className="divide-y divide-slate-50 dark:divide-slate-800">
+                                {students.map((student) => (
+                                    <tr key={student.id} className="group hover:bg-slate-50/50 dark:hover:bg-white/[0.02] transition-all cursor-pointer" onClick={() => setSelectedStudent(student)}>
+                                        <td className="px-8 py-6">
+                                            <div className="flex items-center gap-4">
+                                                <div className="size-14 rounded-2xl bg-slate-900 dark:bg-white/10 flex items-center justify-center text-white font-black text-lg shadow-lg rotate-3 group-hover:rotate-0 transition-transform overflow-hidden">
+                                                    {student.nome.charAt(0)}
+                                                </div>
+                                                <div>
+                                                    <p className="font-black text-slate-900 dark:text-white group-hover:text-primary transition-colors text-base">{student.nome}</p>
+                                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight flex items-center gap-1 mt-0.5">
+                                                        <Users size={12} /> {student.serie}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="px-8 py-6">
+                                            <p className="text-sm font-bold text-slate-600 dark:text-slate-400">{student.escola}</p>
+                                        </td>
+                                        <td className="px-8 py-6">
+                                            <p className="text-sm font-bold text-slate-900 dark:text-slate-300">{student.responsavel_nome}</p>
+                                        </td>
+                                        <td className="px-8 py-6">
+                                            <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${student.status === 'Ativo' ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-500'
+                                                }`}>
+                                                <div className={`size-1.5 rounded-full ${student.status === 'Ativo' ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`} />
+                                                {student.status}
+                                            </span>
+                                        </td>
+                                        <td className="px-8 py-6 text-right">
+                                            <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button className="p-3 bg-slate-50 dark:bg-slate-700/50 text-slate-500 hover:text-primary rounded-xl transition-all"><Edit3 size={18} /></button>
+                                                <button className="p-3 bg-slate-50 dark:bg-slate-700/50 text-slate-500 hover:text-red-500 rounded-xl transition-all"><Trash2 size={18} /></button>
+                                                <button
+                                                    className="px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-primary dark:hover:bg-primary dark:hover:text-white transition-all shadow-lg active:scale-95"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setSelectedStudent(student);
+                                                    }}
+                                                >
+                                                    Ver Aluno
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+                {!isLoading && students.length === 0 && (
                     <div className="p-20 flex flex-col items-center justify-center text-center">
                         <Users size={40} className="text-slate-200 mb-4" />
                         <h3 className="font-black text-slate-400 uppercase tracking-widest">Nenhum aluno registrado</h3>
