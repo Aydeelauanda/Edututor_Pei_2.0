@@ -1,6 +1,7 @@
 import { supabase } from './supabase';
 
 export interface StudentData {
+    id?: string;
     nome: string;
     data_nascimento: string;
     cpf: string;
@@ -14,6 +15,7 @@ export interface StudentData {
 }
 
 export interface SchoolData {
+    id?: string;
     nome: string;
     cnpj?: string;
     telefone?: string;
@@ -21,6 +23,7 @@ export interface SchoolData {
 }
 
 export interface ProfessionalData {
+    id?: string;
     nome: string;
     email: string;
     especialidade: string;
@@ -53,6 +56,26 @@ export const studentService = {
         return data[0];
     },
 
+    async update(id: string, student: Partial<StudentData>) {
+        const { data, error } = await supabase
+            .from('students')
+            .update(student)
+            .eq('id', id)
+            .select();
+
+        if (error) throw error;
+        return data[0];
+    },
+
+    async delete(id: string) {
+        const { error } = await supabase
+            .from('students')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+    },
+
     // --- ESCOLAS ---
     async getAllSchools() {
         const { data, error } = await supabase
@@ -77,6 +100,26 @@ export const studentService = {
         return data[0];
     },
 
+    async updateSchool(id: string, school: Partial<SchoolData>) {
+        const { data, error } = await supabase
+            .from('schools')
+            .update(school)
+            .eq('id', id)
+            .select();
+
+        if (error) throw error;
+        return data[0];
+    },
+
+    async deleteSchool(id: string) {
+        const { error } = await supabase
+            .from('schools')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+    },
+
     // --- PROFISSIONAIS ---
     async getAllProfessionals() {
         const { data, error } = await supabase
@@ -99,6 +142,25 @@ export const studentService = {
 
         if (error) throw error;
         return data[0];
+    },
+
+    async updateProfessional(id: string, professional: Partial<ProfessionalData>) {
+        const { data, error } = await supabase
+            .from('professionals')
+            .update(professional)
+            .eq('id', id)
+            .select();
+
+        if (error) throw error;
+        return data[0];
+    },
+
+    async deleteProfessional(id: string) {
+        const { error } = await supabase
+            .from('professionals')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
     }
 };
-
