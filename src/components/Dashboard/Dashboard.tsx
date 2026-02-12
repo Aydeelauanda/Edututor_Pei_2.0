@@ -73,7 +73,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
             <header className="flex flex-col xl:flex-row justify-between items-start xl:items-center mb-12 gap-8">
               <div>
                 <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
-                  Olá, EduTutorPei! <span className="text-4xl">👋</span>
+                  Olá, VínculoTEA! <span className="text-4xl">👋</span>
                 </h1>
                 <div className="flex items-center gap-3 mt-2">
                   <p className="text-slate-500 dark:text-slate-400 font-medium text-sm">
@@ -517,7 +517,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
               <img src={logoIcon} alt="Logo" className="size-full object-contain scale-110" />
             </div>
           </div>
-          <span className="font-extrabold text-slate-900 dark:text-white tracking-tight uppercase text-xs">EduTutor PEI</span>
+          <span className="font-extrabold text-slate-900 dark:text-white tracking-tight uppercase text-xs">VínculoTEA </span>
         </div>
         <button
           onClick={() => setSidebarOpen(true)}
@@ -546,7 +546,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-black text-slate-900 dark:text-white tracking-tighter text-lg leading-tight">EduTutor</span>
+                  <span className="font-black text-slate-900 dark:text-white tracking-tighter text-lg leading-tight">VínculoTEA</span>
                   <span className="text-[10px] font-black text-primary dark:text-blue-400 uppercase tracking-widest leading-none">Plataforma PEI</span>
                 </div>
               </div>
