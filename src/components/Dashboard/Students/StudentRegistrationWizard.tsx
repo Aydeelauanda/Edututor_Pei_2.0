@@ -1,17 +1,14 @@
 import { useState } from 'react';
-import { ArrowLeft, ArrowRight, Check, User, MapPin, School, BookOpen, Brain, Activity, Loader2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, User, MapPin, School, BookOpen, Brain, Activity } from 'lucide-react';
 import styles from './StudentRegistrationWizard.module.css';
-import { studentService } from '../../../lib/studentService';
 
 interface WizardProps {
     onCancel: () => void;
-    onComplete: () => void;
+    onComplete: (data: any) => void;
 }
 
 export const StudentRegistrationWizard: React.FC<WizardProps> = ({ onCancel, onComplete }) => {
     const [currentStep, setCurrentStep] = useState(1);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const [formData, setFormData] = useState({
         // Step 1: Dados Pessoais
         nomeCompleto: '',
@@ -68,6 +65,7 @@ export const StudentRegistrationWizard: React.FC<WizardProps> = ({ onCancel, onC
     ];
 
     const handleNext = () => {
+        // TODO: Add validation
         if (currentStep < 6) setCurrentStep(prev => prev + 1);
     };
 
@@ -76,30 +74,9 @@ export const StudentRegistrationWizard: React.FC<WizardProps> = ({ onCancel, onC
         else onCancel();
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setIsSubmitting(true);
-        setError(null);
-
-        try {
-            await studentService.create({
-                nome: formData.nomeCompleto,
-                data_nascimento: formData.dataNascimento,
-                cpf: formData.cpf,
-                genero: formData.genero,
-                escola: formData.escola,
-                serie: formData.turma,
-                responsavel_nome: formData.responsavelNome,
-                responsavel_email: formData.responsavelEmail,
-                responsavel_telefone: formData.responsavelTelefone,
-                // Outros campos podem ser adicionados conforme necessário no schema
-            });
-            onComplete();
-        } catch (err: any) {
-            setError('Erro ao salvar aluno: ' + err.message);
-        } finally {
-            setIsSubmitting(false);
-        }
+        onComplete(formData);
     };
 
     return (
@@ -129,12 +106,6 @@ export const StudentRegistrationWizard: React.FC<WizardProps> = ({ onCancel, onC
                     );
                 })}
             </div>
-
-            {error && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-600 text-sm font-bold">
-                    {error}
-                </div>
-            )}
 
             {/* Form Content */}
             <form className={styles.form} onSubmit={handleSubmit}>
@@ -254,71 +225,184 @@ export const StudentRegistrationWizard: React.FC<WizardProps> = ({ onCancel, onC
 
                             <div className={styles.formGroup}>
                                 <label className={styles.label}>Estado <span className={styles.required}>*</span></label>
-                                <input type="text" name="estado" value={formData.estado} onChange={handleChange} className={styles.input} required />
+                                <select name="estado" value={formData.estado} onChange={handleChange} className={styles.input} required>
+                                    <option value="">Selecione...</option>
+                                    <option value="SP">São Paulo</option>
+                                    <option value="RJ">Rio de Janeiro</option>
+                                    <option value="MG">Minas Gerais</option>
+                                </select>
                             </div>
                         </div>
                     </div>
                 )}
 
-                {/* Step 3: Vínculo */}
+                {/* Step 3: Vínculo Escolar */}
                 {currentStep === 3 && (
                     <div className="animate-in fade-in slide-in-from-right-4 duration-300">
                         <h3 className={styles.sectionTitle}><School size={20} /> Vínculo Escolar</h3>
                         <div className={styles.grid}>
                             <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                                <label className={styles.label}>Escola / Instituição <span className={styles.required}>*</span></label>
-                                <input type="text" name="escola" value={formData.escola} onChange={handleChange} className={styles.input} required />
+                                <label className={styles.label}>Escola <span className={styles.required}>*</span></label>
+                                <select name="escola" value={formData.escola} onChange={handleChange} className={styles.input} required>
+                                    <option value="">Selecione uma escola...</option>
+                                    <option value="Escola Municipal Exemplo">Escola Municipal Exemplo</option>
+                                    <option value="Colégio Estadual Modelo">Colégio Estadual Modelo</option>
+                                </select>
                             </div>
+
                             <div className={styles.formGroup}>
-                                <label className={styles.label}>Turma / Série <span className={styles.required}>*</span></label>
-                                <input type="text" name="turma" value={formData.turma} onChange={handleChange} className={styles.input} required />
+                                <label className={styles.label}>Turma <span className={styles.required}>*</span></label>
+                                <select name="turma" value={formData.turma} onChange={handleChange} className={styles.input} required>
+                                    <option value="">Selecione...</option>
+                                    <option value="1a">1º Ano A</option>
+                                    <option value="1b">1º Ano B</option>
+                                    <option value="2a">2º Ano A</option>
+                                </select>
                             </div>
                         </div>
                     </div>
                 )}
 
-                {/* Steps 4, 5, 6 simplificados para brevidade, mas mantendo a lógica */}
-                {currentStep >= 4 && currentStep <= 6 && (
+                {/* Step 4: História */}
+                {currentStep === 4 && (
                     <div className="animate-in fade-in slide-in-from-right-4 duration-300">
-                        <h3 className={styles.sectionTitle}>Informações Adicionais (Etapa {currentStep})</h3>
-                        <p className="text-slate-500 mb-4 italic">Campos de histórico e saúde serão salvos em atualizações futuras do schema.</p>
+                        <h3 className={styles.sectionTitle}><BookOpen size={20} /> História Pré/Peri/Neonatal</h3>
+                        <p className="text-slate-500 text-sm mb-6">💡 Avaliação Inicial: Estas informações são importantes para a criação do PEI. Preencha o que souber.</p>
+
                         <div className={styles.grid}>
-                             <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                                <label className={styles.label}>Observações Gerais</label>
-                                <textarea name="observacoes" value={formData.observacoes} onChange={handleChange} className={styles.input} rows={4} />
+                            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                                <label className={styles.label}>Como foi a gravidez? <span className={styles.required}>*</span></label>
+                                <textarea name="gravidez" value={formData.gravidez} onChange={handleChange} placeholder="Ex: Gravidez tranquila, sem intercorrências..." className={`${styles.input} ${styles.textarea}`} required />
+                            </div>
+
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>Tipo de Parto <span className={styles.required}>*</span></label>
+                                <select name="tipoParto" value={formData.tipoParto} onChange={handleChange} className={styles.input} required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Normal">Normal</option>
+                                    <option value="Cesarea">Cesárea</option>
+                                    <option value="Forceps">Fórceps</option>
+                                </select>
+                            </div>
+
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>Peso ao Nascer (kg) <span className={styles.required}>*</span></label>
+                                <input type="text" name="pesoNascer" value={formData.pesoNascer} onChange={handleChange} placeholder="Ex: 3.2kg" className={styles.input} required />
+                            </div>
+
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>APGAR <span className={styles.required}>*</span></label>
+                                <input type="text" name="apgar" value={formData.apgar} onChange={handleChange} placeholder="Ex: 9/10" className={styles.input} required />
+                            </div>
+
+                            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                                <label className={styles.label}>Houve internação neonatal? <span className={styles.required}>*</span></label>
+                                <input type="text" name="internacaoNeonatal" value={formData.internacaoNeonatal} onChange={handleChange} placeholder="Ex: Não / Sim, 3 dias na UTI" className={styles.input} required />
                             </div>
                         </div>
                     </div>
                 )}
 
-                {/* Footer Actions */}
-                <div className={styles.footer}>
-                    <button type="button" onClick={handleBack} className={styles.backBtn} disabled={isSubmitting}>
+                {/* Step 5: Desenvolvimento */}
+                {currentStep === 5 && (
+                    <div className="animate-in fade-in slide-in-from-right-4 duration-300">
+                        <h3 className={styles.sectionTitle}><Brain size={20} /> Desenvolvimento e Comunicação</h3>
+                        <p className="text-slate-500 text-sm mb-6">💡 Avaliação Inicial: Informações sobre o desenvolvimento e comunicação do aluno.</p>
+
+                        <div className={styles.grid}>
+                            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                                <label className={styles.label}>Marcos do Desenvolvimento <span className={styles.required}>*</span></label>
+                                <textarea name="marcosDesenvolvimento" value={formData.marcosDesenvolvimento} onChange={handleChange} placeholder="Ex: Começou a andar aos 14 meses, primeiras palavras aos 2 anos..." className={`${styles.input} ${styles.textarea}`} required />
+                            </div>
+
+                            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                                <label className={styles.label}>Como é a produção verbal? <span className={styles.required}>*</span></label>
+                                <textarea name="producaoVerbal" value={formData.producaoVerbal} onChange={handleChange} placeholder="Ex: Fala frases curtas, vocabulário limitado..." className={`${styles.input} ${styles.textarea}`} required />
+                            </div>
+
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>Entende instruções simples? <span className={styles.required}>*</span></label>
+                                <select name="entendeInstrucoes" value={formData.entendeInstrucoes} onChange={handleChange} className={styles.input} required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Sim">Sim</option>
+                                    <option value="Nao">Não</option>
+                                    <option value="AsVezes">Às vezes</option>
+                                </select>
+                            </div>
+
+                            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                                <label className={styles.label}>Contato ocular e resposta ao nome <span className={styles.required}>*</span></label>
+                                <input type="text" name="contatoOcular" value={formData.contatoOcular} onChange={handleChange} placeholder="Ex: Mantém contato ocular, responde ao nome..." className={styles.input} required />
+                            </div>
+
+                            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                                <label className={styles.label}>Tipo de brincadeira preferida <span className={styles.required}>*</span></label>
+                                <input type="text" name="brincadeiraPreferida" value={formData.brincadeiraPreferida} onChange={handleChange} placeholder="Ex: Quebra-cabeças, jogos de encaixe, bola..." className={styles.input} required />
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Step 6: Saúde e Rotinas */}
+                {currentStep === 6 && (
+                    <div className="animate-in fade-in slide-in-from-right-4 duration-300">
+                        <h3 className={styles.sectionTitle}><Activity size={20} /> Saúde e Rotinas</h3>
+                        <p className="text-slate-500 text-sm mb-6">💡 Avaliação Inicial: Informações sobre saúde e rotina diária do aluno.</p>
+
+                        <div className={styles.grid}>
+                            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                                <label className={styles.label}>Doenças relevantes ou histórico médico <span className={styles.required}>*</span></label>
+                                <textarea name="doencas" value={formData.doencas} onChange={handleChange} placeholder="Ex: Asma, epilepsia..." className={`${styles.input} ${styles.textarea}`} required />
+                            </div>
+
+                            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                                <label className={styles.label}>Medicação atual <span className={styles.required}>*</span></label>
+                                <input type="text" name="medicacao" value={formData.medicacao} onChange={handleChange} placeholder="Ex: Ritalina 10mg - 1x ao dia" className={styles.input} required />
+                            </div>
+
+                            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                                <label className={styles.label}>Alergias <span className={styles.required}>*</span></label>
+                                <input type="text" name="alergias" value={formData.alergias} onChange={handleChange} placeholder="Ex: Alergia a amendoim, pólen..." className={styles.input} required />
+                            </div>
+
+                            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                                <label className={styles.label}>Rotina de sono <span className={styles.required}>*</span></label>
+                                <input type="text" name="sono" value={formData.sono} onChange={handleChange} placeholder="Ex: Dorme às 21h, acorda às 7h..." className={styles.input} required />
+                            </div>
+
+                            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                                <label className={styles.label}>Alimentação <span className={styles.required}>*</span></label>
+                                <textarea name="alimentacao" value={formData.alimentacao} onChange={handleChange} placeholder="Ex: Come bem, sem seletividade alimentar..." className={`${styles.input} ${styles.textarea}`} required />
+                            </div>
+
+                            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                                <label className={styles.label}>Observações gerais <span className={styles.required}>*</span></label>
+                                <textarea name="observacoes" value={formData.observacoes} onChange={handleChange} className={`${styles.input} ${styles.textarea}`} required />
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Actions */}
+                <div className={styles.actions}>
+                    <button type="button" onClick={handleBack} className={`${styles.button} ${styles.btnSecondary}`}>
                         <ArrowLeft size={18} />
                         {currentStep === 1 ? 'Cancelar' : 'Voltar'}
                     </button>
 
                     {currentStep < 6 ? (
-                        <button type="button" onClick={handleNext} className={styles.nextBtn}>
+                        <button type="button" onClick={handleNext} className={`${styles.button} ${styles.btnPrimary}`}>
                             Próximo
                             <ArrowRight size={18} />
                         </button>
                     ) : (
-                        <button type="submit" className={styles.submitBtn} disabled={isSubmitting}>
-                            {isSubmitting ? (
-                                <>
-                                    <Loader2 size={18} className="animate-spin" />
-                                    Salvando...
-                                </>
-                            ) : (
-                                <>
-                                    Finalizar Cadastro
-                                    <Check size={18} />
-                                </>
-                            )}
+                        <button type="submit" className={`${styles.button} ${styles.btnPrimary}`}>
+                            Finalizar
+                            <Check size={18} />
                         </button>
                     )}
                 </div>
+
             </form>
         </div>
     );

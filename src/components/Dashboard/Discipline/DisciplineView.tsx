@@ -88,8 +88,8 @@ export const DisciplineView = () => {
                                     key={teacher.id}
                                     onClick={() => toggleTeacher(teacher.id)}
                                     className={`flex items-center justify-between p-4 rounded-2xl border-[1.5px] transition-all text-left ${selectedTeachers.includes(teacher.id)
-                                            ? 'bg-primary/5 border-primary/30'
-                                            : 'bg-slate-50 dark:bg-slate-900/30 border-transparent hover:border-slate-200 shadow-sm'
+                                        ? 'bg-primary/5 border-primary/30'
+                                        : 'bg-slate-50 dark:bg-slate-900/30 border-transparent hover:border-slate-200 shadow-sm'
                                         }`}
                                 >
                                     <div className="flex items-center gap-4">
@@ -132,13 +132,17 @@ export const DisciplineView = () => {
         <div className="animate-in fade-in duration-700 space-y-10 pb-12">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
                 <div className="space-y-1">
-                    <h1 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tighter">
+                    <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
                         Matriz <span className="text-primary italic">Curricular</span>
                     </h1>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm font-medium flex items-center gap-2">
-                        <div className="size-2 bg-primary rounded-full animate-pulse" />
-                        8 matérias-base registradas no sistema
-                    </p>
+                    <div className="flex items-center gap-3 mt-2">
+                        <p className="text-slate-500 dark:text-slate-400 text-sm font-medium flex items-center gap-2">
+                            <div className="size-2 bg-primary rounded-full animate-pulse" />
+                            8 Matérias Registradas
+                        </p>
+                        <span className="text-slate-200 dark:text-slate-700">|</span>
+                        <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Organização por competências</p>
+                    </div>
                 </div>
 
                 <button

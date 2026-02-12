@@ -8,7 +8,7 @@ export const Logo: React.FC = () => {
     <div className={styles.container}>
       <img 
         src={logoImg}  
-        alt="VínculoTEA Logo" 
+        alt="EduTutor PEI Logo" 
         className={styles.image}
       />
     </div>
