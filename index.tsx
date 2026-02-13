@@ -1,10 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
-import "./styles/globals.css"
 
-// Ajustando o caminho para o local correto que você me passou
-import { ErrorBoundary } from './components/Erro/ErrorBoundary'
+// Importação do CSS global
+import "./styles/globals.css"
 
 const rootElement = document.getElementById('root')
 
@@ -14,8 +13,6 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <ErrorBoundary>
-      <App />
-    </ErrorBoundary>
+    <App />
   </StrictMode>
 )

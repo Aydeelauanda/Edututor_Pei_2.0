@@ -1,97 +1,78 @@
-import { Component, ErrorInfo, ReactNode } from 'react';
-import { AlertTriangle, RefreshCw, LogIn, ArrowRight } from 'lucide-react';
+import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+// CORREÇÃO: Caminho relativo direto para o CSS que está na mesma pasta
 import styles from './ErrorBoundary.module.css';
-import { supabase } from '../../lib/supabase';
 
 interface Props {
-    children?: ReactNode;
+  children: ReactNode;
 }
 
 interface State {
-    hasError: boolean;
-    error: Error | null;
+  hasError: boolean;
+  error: Error | null;
 }
 
-export class ErrorBoundary extends Component<Props, State> {
-    public state: State = {
-        hasError: false,
-        error: null,
-    };
+class ErrorBoundary extends Component<Props, State> {
+  public state: State = {
+    hasError: false,
+    error: null
+  };
 
-    public static getDerivedStateFromError(error: Error): State {
-        return { hasError: true, error };
-    }
+  public static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error };
+  }
 
-    public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-        console.error('Uncaught error:', error, errorInfo);
-    }
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('Uncaught error:', error, errorInfo);
+  }
 
-    private handleReload = () => {
-        window.location.reload();
-    };
+  private handleReset = () => {
+    this.setState({ hasError: false, error: null });
+    window.location.href = '/';
+  };
 
-    private handleLoginRedirect = async () => {
-        // Tenta limpar a sessão antes de recarregar
-        try {
-            await supabase.auth.signOut();
-            localStorage.clear();
-        } catch (e) {
-            console.warn('Failed to sign out on error boundary', e);
-        }
-        window.location.href = '/';
-    };
+  private handleReload = () => {
+    window.location.reload();
+  };
 
     public render() {
-        if (this.state.hasError) {
-            return (
-                <div className={styles.container}>
-                    {/* Lado Esquerdo: Identidade e Ação */}
-                    <div className={styles.leftPane}>
-                        <div className={styles.tag}>
-                            {this.state.error?.name || 'Sistema'} • Erro {(this.state.error as any)?.status || (this.state.error as any)?.code || '500'}
-                        </div>
+    if (this.state.hasError) {
+      return (
+        <div className={styles.container}>
+          <div className={styles.card}>
+            <div className={styles.iconWrapper}>
+              <AlertTriangle size={48} className={styles.icon} />
+            </div>
+            
+            <h1 className={styles.title}>Ops! Algo deu errado</h1>
+            <p className={styles.message}>
+              Pedimos desculpas pelo inconveniente. Ocorreu um erro inesperado na aplicação.
+            </p>
+            
+            {this.state.error && (
+              <div className={styles.errorDetails}>
+                <code>{this.state.error.toString()}</code>
+              </div>
+            )}
 
-                        <h1 className={styles.title}>
-                            Ops! Algo <span className="italic">deu errado</span>
-                        </h1>
-
-                        <p className={styles.message}>
-                            Encontramos uma interrupção técnica inesperada. Fique tranquilo, nossa equipe já foi notificada e seus dados estão em segurança.
-                        </p>
-
-                        <div className="flex flex-col gap-4 items-start">
-                            <button onClick={this.handleReload} className={styles.buttonLink}>
-                                <RefreshCw size={20} className="animate-spin-slow" />
-                                Tentar novamente
-                            </button>
-
-                            <button onClick={this.handleLoginRedirect} className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-primary transition-colors flex items-center gap-2 mt-4">
-                                <ArrowRight size={14} className="rotate-180" />
-                                Voltar ao início
-                            </button>
-                        </div>
-
-                        {/* Detalhes Técnicos em DEV */}
-
-                    </div>
-
-                    {/* Lado Direito: Ilustração de Alta Tecnologia */}
-                    <div className={styles.rightPane}>
-                        <div className={styles.patternOverlay} />
-                        <img
-                            src="/src/assets/error-tech.png"
-                            alt="Conexão Tech Interrompida"
-                            className={styles.techIllustration}
-                        />
-
-                        <div className="absolute bottom-12 left-12">
-                            <p className={styles.footerText}>© 2026 VínculoTEA • Sistema de Inteligência Pedagógica</p>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        return this.props.children;
+            <div className={styles.actions}>
+              <button onClick={this.handleReload} className={styles.buttonPrimary}>
+                <RefreshCw size={18} />
+                Tentar Novamente
+              </button>
+              <button onClick={this.handleReset} className={styles.buttonSecondary}>
+                <Home size={18} />
+                Voltar ao Início
+              </button>
+            </div>
+          </div>
+        </div>
+      );
     }
+
+    // CORREÇÃO AQUI: Garantindo que o retorno seja um ReactNode válido
+    return this.props.children;
+  }
 }
+
+export default ErrorBoundary;
