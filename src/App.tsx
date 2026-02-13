@@ -1,10 +1,10 @@
-import { LoginForm } from "./src/components/LoginForm";
-import { ForgotPassword } from "./src/components/ForgotPassword";
-import { ResetPassword } from "./src/components/ResetPassword";
-import { Dashboard } from "./src/components/Dashboard";
-import { Logo } from "./src/components/Logo"
+import { LoginForm } from "./components/LoginForm";
+import { ForgotPassword } from "./components/ForgotPassword";
+import { ResetPassword } from "./components/ResetPassword";
+import { Dashboard } from "./components/Dashboard";
+import { Logo } from "./components/Logo"
 import styles from "./styles/App.module.css";
-import { supabase } from "./src/lib/supabase";
+import { supabase } from "./lib/supabase";
 import { useEffect, useState } from 'react'
 import MarketingSection from "@/components/MarketingSection/MarketingSection";
 
